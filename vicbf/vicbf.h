@@ -13,7 +13,7 @@ private:
 	u_int64 l;
 	u_int64 count = 0;
 	vector<u_int64> dl;
-	u_int8 *table;
+	u_int16 *table;
 	hash Hashfamiy;
 public:
 	vicbf(){}
@@ -36,9 +36,13 @@ vicbf::vicbf(u_int64 m, u_int64 k, u_int64 l, string type)
 {
 	this->m = m;
 	this->k = k;
-	this->table = new u_int8[m];
+	this->table = new u_int16[m];
 	Hashfamiy = hash(k);
-	memset(table, 0, sizeof(table));
+	//memset(table, 0, sizeof(table));
+	for (int i = 0; i < m; i++)
+	{
+		table[i] = 0;
+	}
 	int temp = 0;
 	if (type[0] == 's')
 	{
@@ -75,9 +79,12 @@ bool vicbf::Insert(fiveTuple_t pkt)
                 else:
                     self.BF[slot_index] += increment
         */
-        if (table[index] + increase >= pow(2, 8) - 1)
+       	//printf("index %u increase  %u\n",index, increase);
+        if (table[index] + increase >= pow(2, 16) - 1)
         {
-        	table[index] = pow(2, 8) - 1;
+        	printf("maxxxxxx %u \n", index);
+        	table[index] = pow(2, 16) - 1;
+        	printf("1111\n");
         }
         else
         {
@@ -94,13 +101,18 @@ bool vicbf::Query(fiveTuple_t pkt)
 	{
 		u_int64 decrement = dl[Hashfamiy.getkindex(pkt, k + i, dl.size())];
 		u_int64 index = Hashfamiy.getkindex(pkt, i, m);
-		int decrvalue = table[index] - decrement;
-		if (decrvalue < 0)
+		int decrvalue = (int)(table[index] - decrement);
+		//printf("%d\n", decrvalue);
+		//printf("index %u decrement  %u\n",index, decrement);
+		//printf("cha zhi %d\n", decrvalue);
+		if (decrvalue == 0 || decrvalue >= (int)dl[0])
 		{
-			return false;
+			//printf("pass this k\n");
+			continue;
 		}
-		else if (decrvalue > 0 && decrvalue < l)
+		else
 		{
+			//printf("false11\n");
 			return false;
 		}
 	}

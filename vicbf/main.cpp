@@ -16,24 +16,37 @@ int main()
 	char filename[] = "test2.pcap";
 	a.extract(filename, pktbuf, 4000);
 
-	for (int k = 2; k <= 15; k++)
+	for (int k = 2; k <= 20; k++)
 	{
-		vicbf vic = vicbf(12000, k, 4, "s");
+		printf("k = %u\n", k);
+		vicbf vic = vicbf(11250, k, 4, "s");
+
+		//vic.Info();
+		//printf("init \n");
 
 		for (int i = 1; i <= 2000; i++)
 		{
 			vic.Insert(pktbuf[i]);
+			//vic.Info();
+			//printf("\n");
 		}
-		//vic.Info();
+
+
+		//printf("after Insert\n");
+
 		int errcnt = 0;
 
+		
 		for (int i = 2001; i <= 4000; i++)
 		{
 			if (vic.Query(pktbuf[i]))
 			{
 				errcnt++;
 			}
+			//vic.Info();
+			//printf("\n");
 		}
+		
 
 		cout << errcnt << endl;
 		cout<<endl;
