@@ -80,10 +80,10 @@ bool vicbf::Insert(fiveTuple_t pkt)
                     self.BF[slot_index] += increment
         */
        	//printf("index %u increase  %u\n",index, increase);
-        if (table[index] + increase >= pow(2, 16) - 1)
+        if (table[index] + increase >= pow(2, 9) - 1)
         {
         	printf("maxxxxxx %u \n", index);
-        	table[index] = pow(2, 16) - 1;
+        	table[index] = pow(2, 9) - 1;
         	printf("1111\n");
         }
         else
